@@ -24,10 +24,46 @@ class ExamSystem:
         self.students = []
         self.data_file = data_file
         # 启动时自动加载数据
+        self.load_data()
 
     @staticmethod
     def validate_student_id(student_id):
         return student_id.isdigit()
+
+#从文本中读取学生信息
+    def load_data(self):
+        try:
+            with open(self.data_file, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            
+            if len(lines) <= 1:
+                print("警告：文件内容为空或仅有表头，无有效数据。")
+                return
+
+            lines = lines[1:]#防止读取数据时将表头当成学生信息
+
+            for line in lines:
+                parts = line.strip().split()#以空格分割
+                if len(parts) >= 5:
+                    # 文件格式为：序号 姓名 性别 班级 学号 学院
+                    serial_number=parts[0]
+                    name = parts[1]
+                    gender = parts[2]
+                    class_name = parts[3]
+                    student_id = parts[4]
+                    college = parts[5]
+                    
+                    student = Student(serial_number, name, gender, class_name, student_id, college)
+                    self.students.append(student)
+                else:
+                    print(f"警告：跳过格式错误的行 -> {line.strip()}")#如果格式有问题就跳过
+                    
+            print(f"成功加载 {len(self.students)} 名学生信息。")
+
+        except FileNotFoundError:
+            print(f"错误：找不到文件 '{self.data_file}'，请确认文件路径是否正确。")
+        except Exception as e:
+            print(f"发生未知错误：{e}")
 #读取学生信息
     def load_data(self):
         pass

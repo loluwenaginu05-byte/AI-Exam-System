@@ -64,15 +64,42 @@ class ExamSystem:
             print(f"错误：找不到文件 '{self.data_file}'，请确认文件路径是否正确。")
         except Exception as e:
             print(f"发生未知错误：{e}")
-#读取学生信息
-    def load_data(self):
-        pass
+
 #根据学号查找学生信息
     def find_student(self, target_id):
-        pass
+        if not self.validate_student_id(target_id):
+            print("输入错误：学号必须为数字。")
+            return
+
+        found = False
+        for student in self.students:
+            if student.student_id == target_id:
+                print("找到学生信息：")
+                print(student)
+                found = True
+                break
+        
+        if not found:
+            print(f"未找到学号为 {target_id} 的学生。")
 #随机点名系统
     def random_roll_call(self, count_str):
-        pass
+        try:
+            count = int(count_str)
+            if count <= 0:
+                print("输入错误：点名人数必须大于0。")
+                return
+            if count > len(self.students):
+                print(f"输入错误：当前只有 {len(self.students)} 名学生，无法点名 {count} 人。")
+                return
+            
+            # 随机抽取不重复的学生
+            selected_students = random.sample(self.students, count)
+            print(f"\n--- 随机点名结果 ({count}人) ---")
+            for i, s in enumerate(selected_students, 1):
+                print(f"{i}. {s.name} ({s.student_id})")
+
+        except ValueError:
+            print("输入错误：请输入有效的整数数字。")
 #生成考场安排表
     def generate_seating_chart(self):
         pass
@@ -80,7 +107,24 @@ class ExamSystem:
     def generate_admission_tickets(self, seated_students):
         pass
 def main():
-    pass
+     data_file = "人工智能编程语言学生名单.txt"
+     system = ExamSystem(data_file)
+#按照需求选择1-5
+     while True:
+        print("\n=== 学生信息与考场管理系统 ===")
+        print("1. 查询学生信息")
+        print("2. 随机点名")
 
+        choice = input("请选择功能 (1-2): ")
+
+        if choice == '1':
+            sid = input("请输入要查询的学号: ")
+            system.find_student(sid)
+        elif choice == '2':
+            num = input("请输入需要点名的学生数量: ")
+            system.random_roll_call(num)
+ 
+        else:
+            print("无效的选择，请重新输入。")
 if __name__ == "__main__":
-    pass
+    main()

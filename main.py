@@ -65,7 +65,7 @@ class ExamSystem:
         except Exception as e:
             print(f"发生未知错误：{e}")
 
-#根据学号查找学生信息
+#学号查找学生信息
     def find_student(self, target_id):
         if not self.validate_student_id(target_id):
             print("输入错误：学号必须为数字。")
